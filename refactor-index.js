@@ -13,7 +13,7 @@ const { callGeoCodeAPI } = require("./services/geoCode");
 const argv = yargs
   .options({
     a: {
-      demand: true,
+      demand: false,
       alias: "address",
       describe: "Enter your address",
       string: true
@@ -23,7 +23,7 @@ const argv = yargs
   .alias("help", "h")
   .argv
 
-const address = argv.address;
+const address = argv.address || "459 Su Van Hanh";
 
 callGeoCodeAPI(address, (err, res) => {
   if (err) throw new Error(err)
