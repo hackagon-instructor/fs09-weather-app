@@ -12,20 +12,10 @@ const argv = yargs
       string: true
     }
   })
-  .help()
+
   .alias("help", "h")
   .argv
 
 const address = argv.address;
 
-callGeoCodeAPI(address)
-  .then(res => {
-    const { lat, lng } = res;
-    return callDarkSkyAPI(lat, lng)
-  })
-  .then(res => {
-    const { summary, temperature } = res;
-    console.log("temperature", temperature)
-    console.log("summary", summary)
-  })
-  .catch(console.log)
+callGeoCodeAPI(address);
