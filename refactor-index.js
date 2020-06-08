@@ -1,5 +1,14 @@
+// 3rd packages
 const request = require("request"); // ES5
 const yargs = require("yargs");
+
+// my packages
+// const darksky = require("./services/darksky")
+// const callDarkSkyAPI = darksky.callDarkSkyAPI;
+
+// const callDarkSkyAPI = require("./services/darksky").callDarkSkyAPI;
+const { callDarkSkyAPI } = require("./services/darksky");
+const { callGeoCodeAPI } = require("./services/geoCode");
 
 const argv = yargs
   .options({
@@ -16,33 +25,19 @@ const argv = yargs
 
 const address = argv.address;
 
-request({
-  url: `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDBunJ4GXNEC3KJlpoGJO-iB--CjPv4o-s&address=${address}`,
-  json: true
-}, (err, res, body) => {
-  if (err && err.code === "ENOTFOUND")
-    return console.log("Cannot connect to google API");
+callGeoCodeAPI(address, (err, res) => {
+  if (err) throw new Error(err)
+  // throw err
 
-  if (err && err.code === "ERR_UNESCAPED_CHARACTERS")
-    return console.log("Wrong character input")
+  // const lat = res.lat
+  // const lng = res.lng
+  const { lat, lng, formatted_address } = res;
+  console.log("formatted_address: ", formatted_address);
+  callDarkSkyAPI(lat, lng, (err, res) => {
+    if (err) throw new Error(err)
 
-  if (body && body.status === "ZERO_RESULTS")
-    return console.log("Address not found")
-
-  if (body && body.status === "INVALID_REQUEST")
-    return console.log("Invalid request")
-
-  if (body && body.status === "OK") {
-    console.log("address: ", body.results[0].formatted_address)
-    const lat = body.results[0].geometry.location.lat
-    const lng = body.results[0].geometry.location.lng
-
-    request({
-      url: `https://api.darksky.net/forecast/b8164e69c9f7fbc654f20d2d6381d1fc/${lat},${lng}`,
-      json: true
-    }, (err, res, body) => {
-      console.log(body.currently.summary)
-      console.log(body.currently.temperature)
-    })
-  }
+    const { summary, temperature } = res;
+    console.log("summary: ", summary)
+    console.log("temperature: ", temperature)
+  })
 })
