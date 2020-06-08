@@ -5,7 +5,7 @@ const request = require("request"); // ES5
  * @param {*} address 
  * @param {*} callback(err, res) callback has 2 parameters: err (error) and res (result|response) 
  */
-const callDarkSkyAPI = (address, callback) => {
+const callGeoCodeAPI = (address, callback) => {
   request({
     url: `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDBunJ4GXNEC3KJlpoGJO-iB--CjPv4o-s&address=${address}`,
     json: true
@@ -35,8 +35,8 @@ const callDarkSkyAPI = (address, callback) => {
 }
 
 module.exports = {
-  // callDarkSkyAPI: callDarkSkyAPI
-  callDarkSkyAPI // destructuring ES6
+  // callGeoCodeAPI: callGeoCodeAPI
+  callGeoCodeAPI // destructuring ES6
 }
 
-// module.exports.callDarkSkyAPI = callDarkSkyAPI;
+// module.exports.callGeoCodeAPI = callGeoCodeAPI;
